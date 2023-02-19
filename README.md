@@ -49,4 +49,3 @@ connect your repository to your Railway project.
 
 You can enable `Check Suites` in deploy settings on Railway
 to wait workflow runs before deployment.
-
