@@ -20,7 +20,7 @@ using VSCode is highly recommended.
 
 ## Environment Variables
 
-see `.env.example`.
+see [.env.example](https://github.com/sushi-chaaaan/dpy-template/blob/main/.env.example).
 
 you need to set these to `.env` if you want to run bot locally or on Docker.
 
