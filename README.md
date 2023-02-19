@@ -1,6 +1,6 @@
 # dpy-template
 
-template to make [discord.py](https://github.com/Rapptz/discord.py) dev environment with poetry and pre-commit.
+template to make [discord.py](https://github.com/Rapptz/discord.py) dev environment with [poetry](https://github.com/python-poetry/poetry) and [pre-commit](https://pre-commit.com).
 
 some useful GithubActions are contained.
 
@@ -8,7 +8,7 @@ some useful GithubActions are contained.
 
 clone this repository and run commands below.
 
-installing poetry and pre-commit is needed.
+installing [poetry](https://github.com/python-poetry/poetry) and [pre-commit](https://pre-commit.com) is needed.
 
 using VSCode is highly recommended.
 
