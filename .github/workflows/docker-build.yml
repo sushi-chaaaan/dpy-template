@@ -8,6 +8,7 @@ on:
       - '.vscode/**'
       - '.env.example'
       - 'railway.toml'
+      - 'renovate.json'
   pull_request:
     branches: [ "main" ]
     paths-ignore:
@@ -15,6 +16,7 @@ on:
       - '.vscode/**'
       - '.env.example'
       - 'railway.toml'
+      - 'renovate.json'
 
 jobs:
   docker:
