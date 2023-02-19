@@ -4,6 +4,8 @@ template to make [discord.py](https://github.com/Rapptz/discord.py) dev environm
 
 some useful GithubActions are contained.
 
+you need to setup [pre-commit.ci lite](https://pre-commit.ci/lite.html) to use GitHub Actions fully.
+
 ## Installation
 
 clone this repository and run commands below.
