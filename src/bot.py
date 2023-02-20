@@ -1,5 +1,7 @@
 import asyncio
+import json
 import os
+from typing import Any
 
 import discord
 
@@ -17,6 +19,7 @@ if not __debug__:
 class Bot(commands.Bot):
     def __init__(self, **kwargs):
         # self.init_sentry()
+        self.config = self.load_config()
         self.logger = getMyLogger(__name__)
         self.app_cmd_sync_target = discord.Object(int(os.environ["GUILD_ID"]))
 
@@ -30,7 +33,7 @@ class Bot(commands.Bot):
         self.synced_cmd_mention: list[str] = []
 
         super().__init__(
-            command_prefix="! ",
+            command_prefix=self.config.get("prefix", "!"),
             intents=intents,
             **kwargs,
         )
@@ -44,7 +47,7 @@ class Bot(commands.Bot):
         self.print_status()
 
     async def load_exts(self, reload: bool = False) -> None:
-        ext_paths = ["src.cogs.cog"]
+        ext_paths = self.config.get("cogs", None)
         if ext_paths is None:
             return
 
@@ -69,8 +72,12 @@ class Bot(commands.Bot):
     async def setup_views(self) -> None:
         pass
 
+    def load_config(self) -> dict[str, Any]:
+        with open("config.json", "r") as f:
+            return json.load(f)
+
     def print_status(self) -> None:
-        self.logger.info(f"Logged in as {self.user} (ID: {self.user.id})")  # pyright: ignore
+        self.logger.info(f"Logged in as {self.user} (ID: {self.user.id})")  # type: ignore
         self.logger.info(f"Connected to {len(self.guilds)} guilds")  # pyright: ignore
         self.logger.info("Bot is ready")
 
@@ -83,15 +90,15 @@ class Bot(commands.Bot):
     #         traces_sample_rate=1.0,
     #     )
 
-    def run(self) -> None:
+    def runner(self) -> None:
         try:
-            asyncio.run(self.runner())
+            asyncio.run(self._runner())
         except Exception as e:
             self.logger.critical("SystemExit Detected, shutting down...", exc_info=e)
             asyncio.run(self.shutdown(status=1))
             return
 
-    async def runner(self) -> None:
+    async def _runner(self) -> None:
         async with self:
             await self.start(os.environ["DISCORD_BOT_TOKEN"])
 
