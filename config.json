@@ -1,0 +1,6 @@
+{
+    "cogs": [
+        "src.cogs.cog"
+    ],
+    "prefix": "!"
+}
