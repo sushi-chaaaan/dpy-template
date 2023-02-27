@@ -21,16 +21,13 @@ class Bot(commands.Bot):
         # self.init_sentry()
         self.config = self.load_config()
         self.logger = getMyLogger(__name__)
+
+        # set to None if you want to sync as global commands
         self.app_cmd_sync_target = discord.Object(int(os.environ["GUILD_ID"]))
 
         # set intents
         intents = discord.Intents.all()
         intents.typing = False
-
-        # info params
-        self.failed_extensions: list[str] = []
-        self.failed_views: list[str] = []
-        self.synced_cmd_mention: list[str] = []
 
         super().__init__(
             command_prefix=self.config.get("prefix", "!"),
@@ -46,7 +43,7 @@ class Bot(commands.Bot):
     async def on_ready(self) -> None:
         self.print_status()
 
-    async def load_exts(self, reload: bool = False) -> None:
+    async def load_exts(self) -> None:
         ext_paths = self.config.get("cogs", None)
         if ext_paths is None:
             return
@@ -56,18 +53,15 @@ class Bot(commands.Bot):
                 await self.load_extension(ext)
             except Exception as e:
                 self.logger.exception(f"Failed to load {ext}", exc_info=e)
-                self.failed_extensions.append(ext)
         return
 
     async def sync_app_commands(self) -> None:
         try:
-            synced_cmd = await self.tree.sync(guild=self.app_cmd_sync_target)
+            await self.tree.sync(guild=self.app_cmd_sync_target)
         except Exception as e:
             self.logger.exception("Failed to sync application commands", exc_info=e)
-            self.synced_cmd_mention = []
         else:
             self.logger.info("Application commands synced successfully")
-            self.synced_cmd_mention = [c.mention for c in synced_cmd]
 
     async def setup_views(self) -> None:
         pass
