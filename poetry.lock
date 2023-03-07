@@ -500,7 +500,7 @@ files = [
 
 [[package]]
 name = "discord.py"
-version = "2.2.0a4755+gef4240dc"
+version = "2.3.0a4780+gdc9fb1fd"
 description = "A Python wrapper for the Discord API"
 category = "main"
 optional = false
