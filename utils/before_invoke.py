@@ -1,5 +1,9 @@
-import discord
-from discord.ext import commands
+from collections.abc import Callable, Coroutine
+from functools import wraps
+from typing import Any, overload
+
+from discord import Interaction
+from discord.ext.commands import Context
 
 from utils.logger import getMyLogger
 
@@ -22,41 +26,28 @@ Author Name: {author_name}
 """
 
 
-def command_log(context: discord.Interaction | commands.Context):  # type: ignore
+@overload
+def command_log(func: Callable[[Context], Coroutine[Any, Any, None]]):  # type: ignore
+    ...
+
+
+@overload
+def command_log(func: Callable[[Interaction], Coroutine[Any, Any, None]]):
+    ...
+
+
+def command_log(func: Callable[[Interaction | Context, Any | None], Coroutine[Any, Any, None]]):  # type:ignore
     # ここに引数情報のジェネリクスなどをつけてなんとかする
-    def _command_log(func):
-        async def wrapper(*args, **kwargs):
-            # write log
-            logger = getMyLogger(__name__)
+    @wraps(func)
+    async def _wrapper(*args, **kwargs):
+        # write log
+        logger = getMyLogger("command")
+        logger.info("command log")
+        return await func(*args, **kwargs)
 
-            if isinstance(context, discord.Interaction):
-                if context.command is not None:
-                    logger.info(
-                        INTERACTION_LOG_FORMAT.format(
-                            command_name=context.command.name if context.command is not None else "None",
-                            guild_id=context.guild.id if context.guild is not None else "None",
-                            channel_id=context.channel.id if context.channel is not None else "None",
-                            author_id=context.user.id,
-                            author_name=context.user.name,
-                        )
-                    )
+    return _wrapper
 
-            elif isinstance(context, commands.Context):
-                if context.command is not None:
-                    logger.info(
-                        COMMAND_LOG_FORMAT.format(
-                            command_name=context.command.name if context.command is not None else "None",
-                            guild_id=context.guild.id if context.guild is not None else "None",
-                            channel_id=context.channel.id if context.channel is not None else "None",
-                            author_id=context.author.id,
-                            author_name=context.author.name,
-                        )
-                    )
 
-            else:
-                pass
-            return await func(*args, **kwargs)
-
-        return wrapper
-
-    return _command_log
+@command_log
+async def interaction_log(interaction: Interaction):
+    return
