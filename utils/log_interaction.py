@@ -4,7 +4,7 @@ from typing import Any, Union, overload
 
 from discord import Interaction, Member, Message, User
 
-from const import APP_COMMAND_LOG_FORMAT
+from const import app_command_log
 from utils.logger import getMyLogger
 
 # 第2引数以降をEllipsisにして任意にしたかったが無理らしい
@@ -49,12 +49,8 @@ def log_interaction(func: AppCommandFunc):  # pyright: ignore
         if isinstance(args[0], Interaction):
             logger = getMyLogger(func.__name__)
             logger.debug(
-                APP_COMMAND_LOG_FORMAT.format(
-                    command_name=args[0].command.name if args[0].command else "None",
-                    guild_id=args[0].guild_id,
-                    channel_id=args[0].channel_id,
-                    author_id=args[0].user.id,
-                    author_name=args[0].user.name,
+                app_command_log(
+                    interaction=args[0],
                 )
             )
 

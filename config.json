@@ -2,6 +2,6 @@
     "cogs": [
         "src.cogs.cog"
     ],
-    "log_level": "INFO",
+    "log_level": "DEBUG",
     "prefix": "!"
 }
