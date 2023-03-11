@@ -80,9 +80,9 @@ class Bot(commands.Bot):
     def get_logger(self) -> logging.Logger:
         logger = getMyLogger(__name__)
         try:
-            self.logger.setLevel(self.config.get("log_level", "INFO"))
+            logger.setLevel(self.config.get("log_level", "INFO"))
         except (TypeError, ValueError):
-            self.logger.setLevel("INFO")
+            logger.setLevel("INFO")
         return logger
 
     # def init_sentry(self) -> None:
