@@ -1,13 +1,14 @@
 import asyncio
 import json
 import os
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import discord
 
 # import sentry_sdk
 from discord.ext import commands
 
+from const import COMMAND_LOG_FORMAT
 from utils.logger import getMyLogger
 
 if not __debug__:
@@ -15,12 +16,15 @@ if not __debug__:
 
     load_dotenv()
 
+if TYPE_CHECKING:
+    import logging
+
 
 class Bot(commands.Bot):
     def __init__(self, **kwargs):
         # self.init_sentry()
         self.config = self.load_config()
-        self.logger = getMyLogger(__name__)
+        self.logger = self.get_logger()
 
         # set to None if you want to sync as global commands
         self.app_cmd_sync_target = discord.Object(int(os.environ["GUILD_ID"]))
@@ -36,6 +40,7 @@ class Bot(commands.Bot):
         )
 
     async def setup_hook(self) -> None:
+        await self.set_pre_invoke_hook()
         await self.load_exts()
         await self.sync_app_commands()
         await self.setup_views()
@@ -69,6 +74,27 @@ class Bot(commands.Bot):
     def load_config(self) -> dict[str, Any]:
         with open("config.json", "r") as f:
             return json.load(f)
+
+    def get_logger(self) -> logging.Logger:
+        logger = getMyLogger(__name__)
+        try:
+            self.logger.setLevel(self.config.get("log_level", "INFO"))
+        except (TypeError, ValueError):
+            self.logger.setLevel("INFO")
+        return logger
+
+    async def set_pre_invoke_hook(self):
+        @self.before_invoke
+        async def write_debug_log(ctx: commands.Context) -> None:  # type: ignore
+            self.logger.debug(
+                COMMAND_LOG_FORMAT.format(
+                    command_name=ctx.command.name if ctx.command else "None",
+                    guild_id=ctx.guild.id if ctx.guild else "None",
+                    channel_id=ctx.channel.id,
+                    author_id=ctx.author.id,
+                    author_name=ctx.author.name,
+                )
+            )
 
     def print_status(self) -> None:
         self.logger.info(f"Logged in as {self.user} (ID: {self.user.id})")  # type: ignore
