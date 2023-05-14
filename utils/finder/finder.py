@@ -95,6 +95,19 @@ class Finder:
                 member = None
         return member
 
+    async def find_user(self, user_id: int) -> discord.User | None:
+        user: discord.User | None = None
+        user = self.bot.get_user(user_id)
+        if user:
+            return user
+
+        try:
+            user = await self.bot.fetch_user(user_id)
+        except Exception as e:
+            self.logger.exception(literal.USER_NOT_FOUND, exc_info=e)
+            user = None
+        return user
+
     @staticmethod
     def find_bot_permissions(
         guild: discord.Guild,
