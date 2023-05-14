@@ -1,4 +1,7 @@
 {
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
     "cSpell.words": [
         "pydantic",
         "pyright"
@@ -23,8 +26,5 @@
     "python.linting.enabled": true,
     "python.linting.lintOnSave": true,
     "python.linting.mypyEnabled": true,
-    "python.linting.mypyPath": ".venv/bin/mypy",
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
-    }
+    "python.linting.mypyPath": ".venv/bin/mypy"
 }
