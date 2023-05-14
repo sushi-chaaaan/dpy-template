@@ -5,7 +5,7 @@ import discord
 from discord import Thread
 from discord.abc import GuildChannel, PrivateChannel
 
-from utils.finder import literal
+from utils.const import literal
 from utils.logger import getMyLogger
 
 DiscordChannelT = TypeVar("DiscordChannelT", bound=Union[GuildChannel, PrivateChannel, Thread])
@@ -77,7 +77,7 @@ class Finder:
         role = guild.get_role(role_id)
         if not role:
             roles = await guild.fetch_roles()
-            role = discord.utils.get(roles, id=role_id)
+            role = [r for r in roles if r.id == role_id][0]
             if not role:
                 self.logger.exception(literal.CHANNEL_NOT_FOUND)
                 raise
@@ -91,9 +91,22 @@ class Finder:
             try:
                 member = await guild.fetch_member(user_id)
             except Exception as e:
-                self.logger.exception(literal.CHANNEL_NOT_FOUND, exc_info=e)
+                self.logger.exception(literal.USER_NOT_FOUND, exc_info=e)
                 member = None
         return member
+
+    async def find_user(self, user_id: int) -> discord.User | None:
+        user: discord.User | None = None
+        user = self.bot.get_user(user_id)
+        if user:
+            return user
+
+        try:
+            user = await self.bot.fetch_user(user_id)
+        except Exception as e:
+            self.logger.exception(literal.USER_NOT_FOUND, exc_info=e)
+            user = None
+        return user
 
     @staticmethod
     def find_bot_permissions(
