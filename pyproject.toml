@@ -16,7 +16,7 @@ discord-py = { git = "https://github.com/Rapptz/discord.py.git", rev = "master",
 black = "^22.12.0"
 mypy = "^0.991"
 isort = "^5.11.4"
-pyproject-flake8 = "^6.0.0.post1"
+pyproject-flake8 = "^6.0.0-post.0"
 flake8-isort = "^6.0.0"
 poethepoet = "^0.20.0"
 python-dotenv = "^0.21.1"
