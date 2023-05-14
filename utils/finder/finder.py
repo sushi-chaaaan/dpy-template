@@ -77,7 +77,7 @@ class Finder:
         role = guild.get_role(role_id)
         if not role:
             roles = await guild.fetch_roles()
-            role = discord.utils.get(roles, id=role_id)
+            role = [r for r in roles if r.id == role_id][0]
             if not role:
                 self.logger.exception(literal.CHANNEL_NOT_FOUND)
                 raise
