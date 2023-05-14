@@ -9,7 +9,7 @@ import discord
 # import sentry_sdk
 from discord.ext import commands
 
-from const import command_log, login_log
+from const.log import command_log, login_log
 from utils.logger import getMyLogger
 
 if not __debug__:
