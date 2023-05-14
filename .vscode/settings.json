@@ -19,10 +19,12 @@
         "--line-length=125",
         "--target-version=py310"
     ],
-    "python.formatting.provider": "black",
     "python.languageServer": "Pylance",
     "python.linting.enabled": true,
     "python.linting.lintOnSave": true,
     "python.linting.mypyEnabled": true,
-    "python.linting.mypyPath": ".venv/bin/mypy"
+    "python.linting.mypyPath": ".venv/bin/mypy",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    }
 }
