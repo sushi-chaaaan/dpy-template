@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-discord-py = { git = "https://github.com/Rapptz/discord.py.git", rev = "master", extras = [
+discord-py = { git = "https://github.com/Rapptz/discord.py.git", rev = "425edd2e10b9be3d7799c0df0cd1d43a1a34654e", extras = [
     "voice",
     "speed",
 ] }
